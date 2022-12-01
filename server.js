@@ -12,4 +12,8 @@ app.set("views","./views")
 app.get("/", (req,res)=> {
     res.render("home")
 })
+
+app.get("/dashboard", (req,res)=> {
+    res.render("dashboard")
+})
 app.listen(3001)
