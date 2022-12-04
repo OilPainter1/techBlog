@@ -5,5 +5,5 @@ const sequelize = new Sequelize(process.env.DB_name,process.env.DB_username,proc
     host: "localhost",
     dialect: "mysql"
 })
-console.log(sequelize)
+
 module.exports = sequelize
