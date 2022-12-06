@@ -1,14 +1,11 @@
-const newBlogPostSubmit = document.getElementById("submitNewBlogPost")
+//const newBlogPostSubmit = document.getElementById("submitNewBlogPost")
+const signUpSubmit = document.getElementById("signUp")
 
 
-newBlogPostSubmit.addEventListener("submit",async (event)=>{
-    event.preventDefault
-    await fetch("/dashboard",{
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({"test": "test"})
-    })
-    alert("done")
+
+console.log("hello from index.js")
+signUpSubmit.addEventListener("submit",async(event)=>{
+   
+    console.log(event)
+   
 })
