@@ -28,7 +28,8 @@ User.init({
             return newUserData
         }
     },
-    sequelize
+    sequelize,
+    freezeTableName:true
 }
 )
 
