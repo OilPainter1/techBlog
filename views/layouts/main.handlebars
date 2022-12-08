@@ -16,9 +16,15 @@
         <a href="/dashboard">
         Dashboard
         </a>
+        {{#if loggedIn}}
+        <a href="/logout">
+            logout
+        </a>
+        {{else}}
         <a href="/login">
         login
         </a>
+        {{/if}}
     </nav>
     
     {{{body}}}
