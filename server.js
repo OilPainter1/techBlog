@@ -1,6 +1,6 @@
 require("dotenv").config()
 const sequelize = require("./connection/connection")
-const User = require("./models/User")
+const {User,blogPost} = require("./models")
 const express = require("express")
 const {engine} = require("express-handlebars")
 const session = require("express-session")
@@ -19,7 +19,8 @@ app.use(session({
     store: new SequelizeStore({
         db: sequelize
     }),
-    loggedIn:false
+    loggedIn:false,
+    sessionUser:null
 }))
 app.use(express.static(path.join(__dirname,"public")))
 app.use(express.json())
@@ -46,6 +47,7 @@ app.post("/login", async(req,res)=>{
         if(await bcrypt.compare(req.body.loginPassword,attemptedLoginUser.password)){
             req.session.loggedIn=true
             console.log(req.session.loggedIn)
+            req.session.sessionUser=attemptedLoginUser
             res.json(true)
         }
         else{
@@ -68,12 +70,21 @@ app.post("/login/signup", async(req,res)=>{
     
     req.session.user=newUser
     req.session.loggedIn=true
+    req.session.sessionUser= newUser
     res.json("Signed up")
    
 })
-app.get("/dashboard", (req,res)=> {
+app.get("/dashboard", async (req,res)=> {
     if(req.session.loggedIn){
-    res.render("dashboard",{"loggedIn":req.session.loggedIn})
+        const posts = await blogPost.findAll({
+
+            where:{
+                 user: req.session.sessionUser.id
+            }
+        })
+        const serializedPosts= posts.map((post)=> post.get({plain:true}))
+        console.log(serializedPosts)
+    res.render("dashboard",{"loggedIn":req.session.loggedIn,posts:serializedPosts})
     }
     else{
         res.render("login",{"loggedIn":req.session.loggedIn})
@@ -81,17 +92,32 @@ app.get("/dashboard", (req,res)=> {
 })
 
 app.get("/dashboard/newBlogPost", (req,res)=>{
-    if(!session.loggedIn){
-        res.redirect("/login",{loggedIn:req.session.loggedIn})
+    if(!req.session.loggedIn){
+        res.render("/login",{loggedIn:req.session.loggedIn})
     }
     else{
         res.render("newBlogPost")
     }
 
 })
+
+app.post("/dashboard/newBlogPost", async(req,res)=>{
+
+    await blogPost.create({
+        title: req.body.blogPostTitle,
+        post: req.body.blogPostContents,
+        user: req.session.sessionUser.id
+    })
+    res.json("Post added")
+})
+
+
+
 app.get("/logout",(req,res)=>{
     req.session.loggedIn=false
     res.render("home")
 
 })
+
+
 sequelize.sync({force:false}).then(app.listen(PORT))

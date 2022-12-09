@@ -5,8 +5,14 @@ class blogPost extends Model {}
 
 
 blogPost.init({
+    title:{
+        type: DataTypes.STRING
+    },
     post:{
         type: DataTypes.TEXT
+    },
+    user: {
+        type:DataTypes.INTEGER
     }
 },{
     sequelize,

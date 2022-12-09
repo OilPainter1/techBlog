@@ -19,7 +19,7 @@ User.init({
     password: {
         type: DataTypes.STRING,
         allowNull: false,
-    }
+    },
 },
 {
     hooks: {
