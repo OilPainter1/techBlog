@@ -1,7 +1,20 @@
+<div class="container">
 <h2>Dashboard</h2>
 <a href="/dashboard/newBlogPost">
     <button>Add a blog post</button>
 </a>
+</div>
+<div class="container">
+<h3>Posts</h3>
 {{#each posts}}
+<div class="card">
+<div class="container">
 {{title}}
+</div>
+<hr/>
+  <div class="card-body">
+    {{post}}
+  </div>
+</div>
 {{/each}}
+</div>
