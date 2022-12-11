@@ -1,4 +1,3 @@
-//const newBlogPostSubmit = document.getElementById("submitNewBlogPost")
 const signUpSubmit = document.getElementById("signUp")
 const loginSubmit = document.getElementById("login")
 const newBlogPost= document.getElementById("submitNewBlogPost")
@@ -27,6 +26,7 @@ signUpSubmit?.addEventListener("submit",async()=>{
     const usernameInput = document.getElementById("usernameInput").value.trim()
     const passwordInput = document.getElementById("passwordInput").value.trim()
     event.preventDefault()
+   
     await fetch("/login/signup", {
     method: "POST",
     body: JSON.stringify({usernameInput,passwordInput}),
@@ -34,12 +34,9 @@ signUpSubmit?.addEventListener("submit",async()=>{
         "Content-Type": "application/json"
     },
    })
-   if(confirm("You are signed up!")){
-    window.location.href="/dashboard"
-   }
-   else{
-    window.location.href="/dashboard"
-   }
+   
+   window.location.href="/dashboard"
+   
    return 
 })
 console.log(newBlogPost)

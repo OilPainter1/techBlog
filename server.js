@@ -65,6 +65,15 @@ app.post("/login", async(req,res)=>{
 })
 
 app.post("/login/signup", async(req,res)=>{
+    try{
+    if(await User.findOne({
+        where:{
+            name:req.body.usernameInput
+        }
+    })){
+        res.status(404).json("Choose a different username")
+    }
+    else{
     const newUser =await User.create({name: req.body.usernameInput, password: req.body.passwordInput
     })
     
@@ -72,8 +81,10 @@ app.post("/login/signup", async(req,res)=>{
     req.session.loggedIn=true
     req.session.sessionUser= newUser
     res.json("Signed up")
-   
-})
+} 
+} catch(err){
+    res.status("400").json("Try a differrent Username")
+}})
 app.get("/dashboard", async (req,res)=> {
     if(req.session.loggedIn){
         const posts = await blogPost.findAll({
@@ -82,8 +93,7 @@ app.get("/dashboard", async (req,res)=> {
                  user: req.session.sessionUser.id
             }
         })
-        const serializedPosts= posts.map((post)=> post.get({plain:true}))
-        console.log(serializedPosts)
+    const serializedPosts= posts.map((post)=> post.get({plain:true}))
     res.render("dashboard",{"loggedIn":req.session.loggedIn,posts:serializedPosts})
     }
     else{
